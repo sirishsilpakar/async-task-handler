@@ -59,10 +59,14 @@ To set up and run the project, follow these steps:
 - Docker Compose: [Install Docker Compose](https://docs.docker.com/compose/install/)
 
 #### Steps
-1. Clone the repository
+1. Clone the repository (checkout `dev` branch)
 
 ```bash
-git clone https://github.com/yourusername/your-repo.git
+git clone https://github.com/sirishsilpakar/async-task-handler.git
+```
+
+```bash
+cd async-task-handler && git checkout dev
 ```
 
 2. Environment Configuration
