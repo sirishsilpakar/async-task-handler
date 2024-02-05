@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  api:
+    build: ./app
+    ports:
+      - "5000:5000"
+    command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
+    volumes:
+      - ./app:/usr/src/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  worker:
+    build: ./app
+    command: celery -A worker.worker.celery worker --loglevel=debug --logfile=application_logs/celery.log
+    volumes:
+      - ./app:/usr/src/app
+    env_file:
+      - .env
+    depends_on:
+      - api
+      - redis
+
+  redis:
+    image: "redis:alpine"
+    expose:
+      - 6379
+    volumes:
+      - ./app/broker-data:/data
+
+  dashboard:
+    build: ./app
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    ports:
+      - 5556:5555
+    env_file:
+      - .env
+    depends_on:
+      - api
+      - redis
+      - worker
+  
