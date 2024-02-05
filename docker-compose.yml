@@ -22,6 +22,17 @@ services:
     depends_on:
       - api
       - redis
+  
+  celery-monitor:
+    build: ./app
+    command: celery -A monitor.monitor beat --loglevel=debug --logfile=application_logs/celery-schedule.log
+    volumes:
+      - ./app:/usr/src/app
+    env_file:
+      - .env
+    depends_on:
+      - api
+      - redis
 
   redis:
     image: "redis:alpine"

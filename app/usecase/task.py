@@ -2,12 +2,14 @@ import random
 import time
 
 from celery.utils.log import get_logger
+from db.database_logger import log_to_database
 from worker.worker import celery
 
 logger = get_logger(__name__)
 
 
 @celery.task(bind=True, max_retries=3, retry_backoff=True)
+@log_to_database
 def process_async_task(self, data):
     """An asynchronous task to process data with retry mechanism
 
